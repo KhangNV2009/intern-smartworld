@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <LinearLayout
+        android:id="@+id/firstListView"
+        android:orientation="vertical"
+        android:background="@drawable/background_border_white_alpha"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="350dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvFirstWeatherLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                tools:text="Thành Phố Hồ Chí Minh"
+                android:textColor="@color/black"
+                android:textSize="32sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvFirstWeatherType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="60dp"
+                tools:text="Clouds"
+                android:textColor="@color/black"
+                android:textSize="28sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvFirstTemp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:textSize="100sp"
+                tools:text="30" />
+        </FrameLayout>
+    </LinearLayout>
+</layout>

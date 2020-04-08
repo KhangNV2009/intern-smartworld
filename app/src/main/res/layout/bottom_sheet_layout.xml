@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottomSheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    app:layout_behavior="@string/bottom_sheet_behavior"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="56dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textViewFacebook"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:padding="16dp"
+                    android:gravity="center_vertical"
+                    android:drawablePadding="16dp"
+                    android:text="Facebook"
+                    android:textSize="16sp"
+                    tools:ignore="MissingConstraints" />
+
+                <View
+                    android:id="@+id/facebookView"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#bdbdbd"
+                    app:layout_constraintTop_toBottomOf="@id/textViewFacebook" />
+
+                <TextView
+                    android:id="@+id/textViewTwitter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:padding="16dp"
+                    android:text="Twitter"
+                    android:gravity="center_vertical"
+                    android:drawablePadding="16dp"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toBottomOf="@id/facebookView" />
+
+                <View
+                    android:id="@+id/twitterView"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#bdbdbd"
+                    app:layout_constraintTop_toBottomOf="@id/textViewTwitter" />
+
+                <TextView
+                    android:id="@+id/textViewInstagram"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:padding="16dp"
+                    android:gravity="center_vertical"
+                    android:drawablePadding="16dp"
+                    android:text="Instagram"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toBottomOf="@id/twitterView" />
+
+                <View
+                    android:id="@+id/instagramView"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#bdbdbd"
+                    app:layout_constraintTop_toBottomOf="@id/textViewInstagram" />
+
+                <TextView
+                    android:id="@+id/textViewLinkedin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:padding="16dp"
+                    android:gravity="center_vertical"
+                    android:drawablePadding="16dp"
+                    android:text="Linkedin"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toBottomOf="@id/instagramView" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#bdbdbd"
+                    app:layout_constraintTop_toBottomOf="@id/textViewLinkedin" />
+        </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <LinearLayout
+        android:id="@+id/item_weather"
+        android:background="@drawable/background_border_white"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginTop="5dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:ignore="RtlCompat">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_weather_type"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/clouds"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_weather_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                tools:text="Thông Tây Hội"
+                android:textColor="@color/black"
+                android:layout_toEndOf="@id/iv_weather_type"
+                android:layout_toStartOf="@id/tvTemp"
+                android:singleLine="true"
+                android:layout_centerVertical="true"
+                android:textSize="22sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvTemp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="30"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+</layout>

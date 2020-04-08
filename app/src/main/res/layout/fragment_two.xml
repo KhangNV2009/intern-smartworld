@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".home_navigation.weather_city.TwoFragment">
+
+    <Button
+        android:id="@+id/btLogout"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="30dp"
+        android:text="Logout"
+        android:textSize="20dp"
+        android:textFontWeight="@android:integer/config_mediumAnimTime"
+        android:textColor="@color/purple"
+        android:background="@drawable/border_outline_button"
+        android:layout_marginTop="15dp"
+        android:layout_height="48dp"/>
+
+</FrameLayout>

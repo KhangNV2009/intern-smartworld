@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".home_navigation.user_profile.EditActivity">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/outline_textfield_display_name"
+            app:boxStrokeWidth="0.6dp"
+            app:boxStrokeColor="@color/purple"
+            android:textColorHint="@color/grey"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="20dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:singleLine="true"
+                android:textColorHint="@color/grey"
+                android:textColor="@color/black"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_person_black_24dp"
+                android:hint="@string/display_name"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/outline_textfield_phone_number"
+            app:boxStrokeWidth="0.6dp"
+            app:boxStrokeColor="@color/purple"
+            android:textColorHint="@color/grey"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="20dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:singleLine="true"
+                android:inputType="phone"
+                android:textColorHint="@color/grey"
+                android:textColor="@color/black"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_phone_black_24dp"
+                android:hint="@string/phone_number"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+</layout>
