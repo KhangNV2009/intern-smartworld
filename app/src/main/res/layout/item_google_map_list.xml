@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:id="@+id/item_station"
+        android:layout_marginVertical="10dp"
+        android:layout_marginStart="10dp"
+        android:orientation="vertical"
+        android:background="@drawable/background_border_white"
+        android:layout_width="330dp"
+        android:layout_height="160dp">
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_station_location"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:text="Thành phố Hồ Chí Minh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_station_temp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/black"
+            android:textSize="40sp"
+            android:text="30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:weightSum="2"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="ExtraText">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/bt_view_detail"
+                android:layout_marginStart="10dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:text="Xem chi tiết"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:layout_height="40dp"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/bt_direction"
+                android:layout_marginHorizontal="10dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/purple"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:textColor="@color/purple"
+                android:text="Chỉ đường"
+                android:layout_width="0dp"
+                android:layout_height="40dp"/>
+                />
+        </LinearLayout>
+    </LinearLayout>
+</layout>

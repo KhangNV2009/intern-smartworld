@@ -10,6 +10,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/outline_textfield_display_name"
+            app:helperTextTextColor="#FF0000"
             app:boxStrokeWidth="0.6dp"
             app:boxStrokeColor="@color/purple"
             android:textColorHint="@color/grey"
@@ -30,6 +31,7 @@
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/outline_textfield_phone_number"
+            app:helperTextTextColor="#FF0000"
             app:boxStrokeWidth="0.6dp"
             app:boxStrokeColor="@color/purple"
             android:textColorHint="@color/grey"
@@ -49,5 +51,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"/>
         </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/bt_edit"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="30dp"
+            android:textStyle="bold"
+            android:text="@string/edit"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:layout_marginTop="20dp"
+            android:layout_height="60dp"
+            />
     </LinearLayout>
 </layout>

@@ -18,9 +18,9 @@ data class WeatherInfo (
     @SerializedName("sys")
     val sys: Sys?,
     @SerializedName("rain")
-    val rain: String?,
+    val rain: Any?,
     @SerializedName("snow")
-    val snow: String?,
+    val snow: Any?,
     @SerializedName("clouds")
     val clouds: Clouds?,
     @SerializedName("weather")

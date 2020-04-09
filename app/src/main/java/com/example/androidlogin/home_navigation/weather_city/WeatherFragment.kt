@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.androidlogin.R
 import com.example.androidlogin.`object`.API
 import com.example.androidlogin.`object`.RxBus
@@ -19,6 +20,8 @@ import com.example.androidlogin.home_navigation.weather_detail.WeatherDetailActi
 import com.example.androidlogin.model.weather_model.WeatherInfo
 import com.example.androidlogin.model.weather_model.WeatherModel
 import com.example.androidlogin.resources.Constant
+import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.android.synthetic.main.fragment_weather.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,9 +33,11 @@ class WeatherFragment() : Fragment(), OnItemWeatherListener {
     private var mWeatherList: MutableList<WeatherInfo> = mutableListOf()
     var mCurrentLocation : Location? = null
     private var mWeatherAdapter : WeatherAdapter? = null
+    private lateinit var mLocationDisposable: Disposable
 
     override fun onDestroy() {
         super.onDestroy()
+        if(!mLocationDisposable.isDisposed) mLocationDisposable.dispose()
     }
 
     override fun onItemWeatherClick(weather: WeatherInfo) {
@@ -45,11 +50,13 @@ class WeatherFragment() : Fragment(), OnItemWeatherListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        RxBus.listen(Location::class.java).subscribe {
-            Log.d("GoogleMapFragment", "$it")
+        Log.d("WeatherFragment", "$mCurrentLocation")
+
+        mLocationDisposable = RxBus.listen(Location::class.java).subscribe {
             mCurrentLocation = it
             mWeatherList.clear()
-            initData(mCurrentLocation)
+            initData(it)
+            Log.d("WeatherFragment", "$it")
         }
     }
 
@@ -62,8 +69,11 @@ class WeatherFragment() : Fragment(), OnItemWeatherListener {
         binding.rvWeather.layoutManager = LinearLayoutManager(context!!)
         binding.rvWeather.adapter = mWeatherAdapter
 
-        if (mWeatherList.isNullOrEmpty()) initData(mCurrentLocation)
-
+        binding.srlPullToRefresh.setOnRefreshListener {
+            mWeatherList.clear()
+            initData(mCurrentLocation)
+            binding.srlPullToRefresh.isRefreshing = false
+        }
         return binding.root
     }
 
@@ -72,7 +82,7 @@ class WeatherFragment() : Fragment(), OnItemWeatherListener {
     }
 
     private fun initData(location: Location?) {
-        API.apiService.getAPI(location!!.latitude, location!!.longitude, 15, Constant.APP_ID).enqueue(object: Callback<WeatherModel> {
+        API.apiService.getAPI(location?.latitude, location?.longitude, 30, Constant.APP_ID).enqueue(object: Callback<WeatherModel> {
             override fun onResponse(call: Call<WeatherModel>, response: Response<WeatherModel>) {
                 if (response.body() == null) {
                     return

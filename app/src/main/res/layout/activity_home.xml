@@ -7,10 +7,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        android:weightSum="10"
+        android:weightSum="12"
         android:orientation="vertical">
         <androidx.viewpager.widget.ViewPager
-            android:layout_weight="9"
+            android:layout_weight="11"
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

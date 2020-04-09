@@ -1,9 +1,6 @@
 package com.example.androidlogin.`object`
 
-import android.location.Location
-import android.util.Log
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.kotlin.ofType
 import io.reactivex.rxjava3.subjects.PublishSubject
 
 object RxBus {

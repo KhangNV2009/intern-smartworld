@@ -10,7 +10,9 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
+import android.util.AttributeSet
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +31,7 @@ import com.example.androidlogin.home_navigation.google_map.GoogleMapFragment
 import com.example.androidlogin.home_navigation.map_navigation.NavigationFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
+import io.reactivex.rxjava3.disposables.Disposable
 
 
 class HomeActivity : AppCompatActivity(), LocationListener {
@@ -37,11 +40,15 @@ class HomeActivity : AppCompatActivity(), LocationListener {
     private var mfusedLocationProviderClient: FusedLocationProviderClient? = null
     val PERMISSION_ID = 42
     var mLastLocation: Location? = null
+    private lateinit var mLocationDisposable: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
         mfusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        setupViewPager()
+        getLastLocation()
+        requestNewLocationData()
     }
 
     override fun onResume() {
@@ -72,9 +79,6 @@ class HomeActivity : AppCompatActivity(), LocationListener {
         })
     }
 
-    override fun onStop() {
-        super.onStop()
-    }
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { menuItem ->
         when (menuItem.itemId) {
             R.id.itemHome -> {
@@ -111,7 +115,6 @@ class HomeActivity : AppCompatActivity(), LocationListener {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (requestCode == PERMISSION_ID) {
             if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                // Granted. Start getting the location information
                 Toast.makeText(this,"Permission granted",Toast.LENGTH_SHORT).show()
             }
         }
@@ -125,8 +128,7 @@ class HomeActivity : AppCompatActivity(), LocationListener {
                         requestNewLocationData()
                     }else{
                         mLastLocation = location
-                        Log.d("HomeActivity", "${mLastLocation?.latitude} -- ${mLastLocation?.longitude}")
-                        setupViewPager()
+                        RxBus.publish(Location(location))
                     }
                 }
             } else {
@@ -151,8 +153,7 @@ class HomeActivity : AppCompatActivity(), LocationListener {
         val settingsClient = LocationServices.getSettingsClient(this)
         settingsClient.checkLocationSettings(locationSettingsRequest)
 
-        mfusedLocationProviderClient!!.requestLocationUpdates(mLocationRequest, mLocationCallback,
-            Looper.myLooper())
+        mfusedLocationProviderClient!!.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper())
     }
     private val mLocationCallback = object : LocationCallback() {
         @RequiresApi(Build.VERSION_CODES.N)
@@ -164,11 +165,7 @@ class HomeActivity : AppCompatActivity(), LocationListener {
     override fun onLocationChanged(location: Location?) {
         val distance = mLastLocation?.distanceTo(location)?.toInt()
         if(distance != null) {
-            if(distance > 500) {
-                mLastLocation = location
-                RxBus.publish(Location(location))
-            }
-            else if(distance >= 1) {
+            if(distance >= 50000) {
                 mLastLocation = location
                 RxBus.publish(Location(location))
             }

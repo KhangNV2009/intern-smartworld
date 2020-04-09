@@ -1,5 +1,6 @@
 package com.example.androidlogin.home_navigation.user_profile
 
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
@@ -107,9 +108,8 @@ class ProfileFragment : Fragment() {
         binding.tvEmail.text = mUser?.email
 
         if(mUserPhone.isNullOrEmpty()) {
-            binding.rlPhone.visibility = View.GONE
+            binding.tvPhone.text = "not available"
         } else {
-            binding.rlPhone.visibility = View.VISIBLE
             binding.tvPhone.text = mUserPhone
         }
         Glide.with(view!!.context).load("${mUser?.photoUrl}").error(R.drawable.avatar).into(binding.ivAvatar)
@@ -183,6 +183,7 @@ class ProfileFragment : Fragment() {
             }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun cloudFirebase() {
         val db = Firebase.firestore
 
@@ -193,9 +194,8 @@ class ProfileFragment : Fragment() {
                     mUserPhone = user?.user_phone
 
                     if(mUserPhone.isNullOrEmpty()) {
-                        binding.rlPhone.visibility = View.GONE
+                        binding.tvPhone.text = "not available"
                     } else {
-                        binding.rlPhone.visibility = View.VISIBLE
                         binding.tvPhone.text = user?.user_phone
                     }
                 }

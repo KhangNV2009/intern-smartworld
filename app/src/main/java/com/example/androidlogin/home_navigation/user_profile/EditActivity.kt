@@ -28,23 +28,12 @@ class EditActivity : AppCompatActivity() {
         return super.onSupportNavigateUp()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.edit_button_action_bar, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.item_edit) {
-            updateUserName(binding.outlineTextfieldDisplayName.editText?.text.toString())
-            updatePhoneNumber(binding.outlineTextfieldPhoneNumber.editText?.text.toString())
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit)
+
+        supportActionBar?.title = "Edit Profile"
 
         binding.lifecycleOwner = this
 
@@ -54,6 +43,19 @@ class EditActivity : AppCompatActivity() {
         binding.outlineTextfieldDisplayName.editText?.setText(mDisplayName)
         binding.outlineTextfieldPhoneNumber.editText?.setText(mPhoneNumber)
 
+        binding.btEdit.setOnClickListener {
+            if(binding.outlineTextfieldDisplayName.editText?.text.toString().isNotEmpty() &&
+                binding.outlineTextfieldPhoneNumber.editText?.text.toString().isNotEmpty()) {
+                updateUserName(binding.outlineTextfieldDisplayName.editText?.text.toString())
+                updatePhoneNumber(binding.outlineTextfieldPhoneNumber.editText?.text.toString())
+            }
+            else if(binding.outlineTextfieldDisplayName.editText?.text.toString().isEmpty()) {
+                binding.outlineTextfieldDisplayName.helperText = "Display name is invalid"
+            }
+            else if(binding.outlineTextfieldPhoneNumber.editText?.text.toString().isEmpty()) {
+                binding.outlineTextfieldPhoneNumber.helperText = "Phone number is invalid"
+            }
+        }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }
@@ -61,14 +63,14 @@ class EditActivity : AppCompatActivity() {
         val profileUpdates = UserProfileChangeRequest.Builder()
             .setDisplayName(username)
             .build()
-         val loading = Utils.showLoading(this)
+        val loading = Utils.showLoading(this)
         mUser?.updateProfile(profileUpdates)
             ?.addOnCompleteListener {task ->
                 loading?.dismiss()
                 if(task.isSuccessful) {
                 }
             }?.addOnFailureListener {
-                    loading?.dismiss()
+                loading?.dismiss()
                 Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
             }
     }
