@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class WeatherModel (
     @SerializedName("message")
-    val message: String,
+    val message: Any,
     @SerializedName("String")
     val cod: String,
     @SerializedName("count")

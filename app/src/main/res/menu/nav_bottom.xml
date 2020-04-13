@@ -6,12 +6,14 @@
         android:id="@+id/itemHome"
         android:icon="@drawable/ic_home_black_24dp"
         android:enabled="true"
-        android:title="Home"
+        android:checked="false"
+        android:title="@string/home"
         />
     <item
         android:id="@+id/itemProfile"
-        android:icon="@drawable/ic_person_black_24dp"
+        android:checked="false"
         android:enabled="true"
-        android:title="Profile"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="@string/profile"
         />
 </menu>

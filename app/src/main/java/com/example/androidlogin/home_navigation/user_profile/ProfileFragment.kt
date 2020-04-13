@@ -144,28 +144,6 @@ class ProfileFragment : Fragment() {
 
     }
 
-//    private fun getImageUrl(uploadTask: UploadTask, image: String) {
-//        val storage = Firebase.storage("gs://kotlinweatherapp-986b6.appspot.com")
-//        val storageRef = storage.reference
-//        val file = Uri.fromFile(File(image))
-//        val imageRef = storageRef.child("images/${file.lastPathSegment}")
-//
-//        uploadTask.continueWithTask { task ->
-//            if (!task.isSuccessful) {
-//                task.exception?.let {
-//                    throw it
-//                }
-//            }
-//            imageRef.downloadUrl
-//        }.addOnCompleteListener { task ->
-//            if (task.isSuccessful) {
-//                val downloadUri = task.result
-//                Log.d("UploadImage", "Url: $downloadUri")
-//                updateUserImage(downloadUri.toString())
-//            }
-//        }
-//    }
-
     private fun updateUserAvatar(url: String) {
         val user = FirebaseAuth.getInstance().currentUser
         val profileUpdates = UserProfileChangeRequest.Builder()

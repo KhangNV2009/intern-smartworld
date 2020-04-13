@@ -18,8 +18,10 @@ import com.example.androidlogin.`object`.RxBus
 import com.example.androidlogin.databinding.FragmentWeatherBinding
 import com.example.androidlogin.home_navigation.weather_detail.WeatherDetailActivity
 import com.example.androidlogin.model.weather_model.WeatherInfo
+import com.example.androidlogin.model.weather_model.WeatherList
 import com.example.androidlogin.model.weather_model.WeatherModel
 import com.example.androidlogin.resources.Constant
+import com.example.androidlogin.utils.Utils
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_weather.*
 import retrofit2.Call
@@ -50,13 +52,13 @@ class WeatherFragment() : Fragment(), OnItemWeatherListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.d("WeatherFragment", "$mCurrentLocation")
-
-        mLocationDisposable = RxBus.listen(Location::class.java).subscribe {
-            mCurrentLocation = it
+        mLocationDisposable = RxBus.listen(WeatherList::class.java).subscribe {
+            val loading = Utils.showLoading(context!!)
             mWeatherList.clear()
-            initData(it)
-            Log.d("WeatherFragment", "$it")
+            mWeatherList.addAll(it.list)
+            binding.rvWeather.adapter?.notifyDataSetChanged()
+            loading?.dismiss()
+            Log.d("WeatherFragment", "${it.list.first().name}")
         }
     }
 
@@ -70,8 +72,7 @@ class WeatherFragment() : Fragment(), OnItemWeatherListener {
         binding.rvWeather.adapter = mWeatherAdapter
 
         binding.srlPullToRefresh.setOnRefreshListener {
-            mWeatherList.clear()
-            initData(mCurrentLocation)
+//            mWeatherList.clear()
             binding.srlPullToRefresh.isRefreshing = false
         }
         return binding.root
@@ -82,7 +83,7 @@ class WeatherFragment() : Fragment(), OnItemWeatherListener {
     }
 
     private fun initData(location: Location?) {
-        API.apiService.getAPI(location?.latitude, location?.longitude, 30, Constant.APP_ID).enqueue(object: Callback<WeatherModel> {
+        API.apiService.getAPI(location?.latitude, location?.longitude, 15, Constant.APP_ID).enqueue(object: Callback<WeatherModel> {
             override fun onResponse(call: Call<WeatherModel>, response: Response<WeatherModel>) {
                 if (response.body() == null) {
                     return

@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
 import androidx.viewpager.widget.ViewPager
 import com.example.androidlogin.home_navigation.user_profile.ProfileFragment
@@ -163,12 +164,6 @@ class HomeActivity : AppCompatActivity(), LocationListener {
     }
 
     override fun onLocationChanged(location: Location?) {
-        val distance = mLastLocation?.distanceTo(location)?.toInt()
-        if(distance != null) {
-            if(distance >= 50000) {
-                mLastLocation = location
-                RxBus.publish(Location(location))
-            }
-        }
+        RxBus.publish(Location(location))
     }
 }

@@ -12,14 +12,13 @@
             android:layout_height="match_parent" />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_station"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:paddingRight="10dp"
-            android:paddingBottom="10dp"
             android:clipToPadding="false"
             android:scrollbars="horizontal"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
-            android:layout_height="160dp">
+            android:layout_height="180dp">
         </androidx.recyclerview.widget.RecyclerView>
     </RelativeLayout>
 </layout>

@@ -49,12 +49,15 @@ class StationViewHolder(private val binding: ItemGoogleMapListBinding, var liste
         binding.tvStationLocation.text = model.name
         val temp = "${celsius.toInt()}°C"
         binding.tvStationTemp.text = temp
-        binding.btViewDetail.setOnClickListener {
+        binding.itemStation.setOnClickListener {
             listener.onItemStationClick(model)
         }
         binding.btDirection.setOnClickListener {
             listener.onItemStationClickDirection(model)
         }
+        Glide.with(binding.ivStationType.context)
+            .load("http://openweathermap.org/img/wn/${model.weather?.first()?.icon}@2x.png")
+            .into(binding.ivStationType)
     }
 }
 
