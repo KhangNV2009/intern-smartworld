@@ -157,7 +157,9 @@ class RegisterActivity : AppCompatActivity() {
         val db = Firebase.firestore
         db.collection("user").document(userId)
             .set(mapOf(
-                "user_phone" to null
+                "user_phone" to null,
+                "user_lat" to null,
+                "user_long" to null
                 )
             )
             .addOnSuccessListener { Log.d("RegisterActivity", "DocumentSnapshot successfully written!") }

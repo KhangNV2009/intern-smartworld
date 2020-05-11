@@ -266,7 +266,25 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-
+            <HorizontalScrollView
+                android:background="@color/white2"
+                android:elevation="2dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/day_line_chart"
+                        android:layout_margin="10dp"
+                        android:background="@color/white2"
+                        android:layout_width="700dp"
+                        android:layout_height="200dp"/>
+                </LinearLayout>
+            </HorizontalScrollView>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

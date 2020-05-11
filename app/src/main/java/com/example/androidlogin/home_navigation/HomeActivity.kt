@@ -1,8 +1,11 @@
 package com.example.androidlogin.home_navigation
 
 import android.Manifest
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
@@ -10,29 +13,26 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
-import android.util.AttributeSet
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
 import androidx.viewpager.widget.ViewPager
-import com.example.androidlogin.home_navigation.user_profile.ProfileFragment
-import com.example.androidlogin.home_navigation.weather_city.WeatherFragment
-import com.example.androidlogin.databinding.ActivityHomeBinding
-import com.google.android.gms.location.*
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.activity_home.*
 import com.example.androidlogin.R
 import com.example.androidlogin.`object`.RxBus
-import com.example.androidlogin.home_navigation.google_map.GoogleMapFragment
+import com.example.androidlogin.databinding.ActivityHomeBinding
 import com.example.androidlogin.home_navigation.map_navigation.NavigationFragment
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.LatLng
+import com.example.androidlogin.home_navigation.user_profile.ProfileFragment
+import com.example.androidlogin.push_notification.PushNotificationReceiver
+import com.google.android.gms.location.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import io.reactivex.rxjava3.disposables.Disposable
+import java.util.*
 
 
 class HomeActivity : AppCompatActivity(), LocationListener {
@@ -42,14 +42,14 @@ class HomeActivity : AppCompatActivity(), LocationListener {
     val PERMISSION_ID = 42
     var mLastLocation: Location? = null
     private lateinit var mLocationDisposable: Disposable
+    val mUser = FirebaseAuth.getInstance().currentUser
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
         mfusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        setupViewPager()
         getLastLocation()
-        requestNewLocationData()
+        setupViewPager()
     }
 
     override fun onResume() {
@@ -64,7 +64,7 @@ class HomeActivity : AppCompatActivity(), LocationListener {
         adapter.addFragment(ProfileFragment.newInstance(this))
         binding.viewPager.adapter = adapter
         supportActionBar?.hide()
-        bottom_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        binding.bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         binding.viewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
 
@@ -75,7 +75,7 @@ class HomeActivity : AppCompatActivity(), LocationListener {
             ) {
             }
             override fun onPageSelected(position: Int) {
-                bottom_navigation.menu.getItem(position).isChecked = true
+                binding.bottomNavigation.menu.getItem(position).isChecked = true
             }
         })
     }
@@ -130,6 +130,8 @@ class HomeActivity : AppCompatActivity(), LocationListener {
                     }else{
                         mLastLocation = location
                         RxBus.publish(Location(location))
+                        updateUserLocation(location)
+                        setupPushNotification()
                     }
                 }
             } else {
@@ -144,8 +146,8 @@ class HomeActivity : AppCompatActivity(), LocationListener {
     private fun requestNewLocationData() {
         val mLocationRequest = LocationRequest()
         mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        mLocationRequest.interval = 10000
-        mLocationRequest.fastestInterval = 10000
+        mLocationRequest.interval = 1000
+        mLocationRequest.fastestInterval = 1000
 
         val builder = LocationSettingsRequest.Builder()
         builder.addLocationRequest(mLocationRequest)
@@ -165,5 +167,44 @@ class HomeActivity : AppCompatActivity(), LocationListener {
 
     override fun onLocationChanged(location: Location?) {
         RxBus.publish(Location(location))
+        val distance = location?.distanceTo(mLastLocation)?.toInt()
+        if(distance!! >= 50000) {
+            updateUserLocation(location)
+        }
+    }
+
+    private fun updateUserLocation(location: Location?) {
+        val db = Firebase.firestore
+        db.collection("user").document(mUser?.uid.toString())
+            .update(mapOf(
+                "user_lat" to location?.latitude,
+                "user_long" to location?.longitude
+            ))
+            .addOnSuccessListener {
+                val userDataPreferences: SharedPreferences = getSharedPreferences("userData", 0)
+                val editorUserData: SharedPreferences.Editor = userDataPreferences.edit()
+                editorUserData.putFloat("userDataLat", location!!.latitude.toFloat()).apply()
+                editorUserData.putFloat("userDataLon", location.longitude.toFloat()).apply()
+                setupPushNotification()
+                Log.d("HomeActivity", "DocumentSnapshot successfully written!")
+            }
+            .addOnFailureListener { e -> Log.w("HomeActivity", "Error writing document", e) }
+    }
+    private fun setupPushNotification() {
+        val userDataPreferences: SharedPreferences = getSharedPreferences("userData", 0)
+        val editorUserData: SharedPreferences.Editor = userDataPreferences.edit()
+        if(!userDataPreferences.getBoolean("isSetupNotification", false)) {
+            Log.d("HomeActivity", "is setup notification")
+            val notifyIntent = Intent(this, PushNotificationReceiver::class.java)
+            val pendingIntent = PendingIntent.getBroadcast(this.applicationContext, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val alarmManager: AlarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val calendar: Calendar = Calendar.getInstance()
+            calendar.timeInMillis = System.currentTimeMillis()
+            calendar.set(Calendar.HOUR_OF_DAY, 7)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 1)
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
+            editorUserData.putBoolean("isSetupNotification", true).apply()
+        }
     }
 }

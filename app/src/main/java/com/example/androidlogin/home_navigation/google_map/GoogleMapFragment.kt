@@ -1,6 +1,7 @@
 package com.example.androidlogin.home_navigation.google_map
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.location.Location
 import android.net.Uri
@@ -15,6 +16,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.example.androidlogin.R
 import com.example.androidlogin.`object`.API
 import com.example.androidlogin.`object`.RxBus
@@ -44,6 +48,8 @@ class GoogleMapFragment : Fragment(), OnMapReadyCallback, OnItemStationListener 
     private lateinit var mLocationDisposable: Disposable
     private var mIsGetLocation: Boolean? = false
     private var mStationAdapter : StationAdapter? = null
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,6 +129,7 @@ class GoogleMapFragment : Fragment(), OnMapReadyCallback, OnItemStationListener 
 
     override fun onMapReady(googleMap: GoogleMap?) {
         mMap = googleMap
+        mMap?.setMapStyle(MapStyleOptions.loadRawResourceStyle(context, R.raw.mapstyle_night))
         mMap?.isMyLocationEnabled = true
         mMap?.setOnMapLongClickListener {
             initData(it.latitude, it.longitude, true)
@@ -146,14 +153,21 @@ class GoogleMapFragment : Fragment(), OnMapReadyCallback, OnItemStationListener 
         }
         var bounds: LatLngBounds? = null
         var builder = LatLngBounds.builder()
-        for (items in mLocationList) {
+        for(i in 0 until mLocationList.size) {
             mMarker.add(mMap!!.addMarker(MarkerOptions()
-                .position(LatLng(items.coord!!.lat, items.coord.lon))
-                .title(items.name)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.station))
+                .position(LatLng(mLocationList[i].coord!!.lat, mLocationList[i].coord!!.lon))
+                .title(mLocationList[i].name)
             ))
-            mMarker[mMarker.size - 1].tag = items.id
-            builder = builder.include(LatLng(items.coord.lat, items.coord.lon))
+            Glide.with(this)
+                .asBitmap()
+                .load("http://openweathermap.org/img/wn/${mLocationList[i].weather!!.first().icon}@2x.png")
+                .into(object : SimpleTarget<Bitmap>() {
+                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        mMarker[i].setIcon(BitmapDescriptorFactory.fromBitmap(resource))
+                    }
+                })
+            mMarker[i].tag = mLocationList[i].id
+            builder = builder.include(LatLng(mLocationList[i].coord!!.lat, mLocationList[i].coord!!.lon))
         }
         bounds = builder.build()
         mMap?.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))

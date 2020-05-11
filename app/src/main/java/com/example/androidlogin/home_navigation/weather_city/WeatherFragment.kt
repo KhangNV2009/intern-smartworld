@@ -83,7 +83,7 @@ class WeatherFragment() : Fragment(), OnItemWeatherListener {
     }
 
     private fun initData(location: Location?) {
-        API.apiService.getAPI(location?.latitude, location?.longitude, 15, Constant.APP_ID).enqueue(object: Callback<WeatherModel> {
+        API.apiService.getAPI(location?.latitude, location?.longitude, 1, Constant.APP_ID).enqueue(object: Callback<WeatherModel> {
             override fun onResponse(call: Call<WeatherModel>, response: Response<WeatherModel>) {
                 if (response.body() == null) {
                     return

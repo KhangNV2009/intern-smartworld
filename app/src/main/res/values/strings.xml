@@ -16,4 +16,7 @@
     <string name="edit">Edit</string>
     <string name="profile">Profile</string>
     <string name="home">Home</string>
+    <string name="permission_gps_title">Để thực hiện suôn sẻ việc xem thời tiết một cách chính xác</string>
+    <string name="permission_gps_text">Tôi có thể truy cập thông tin địa điểm của bạn được không? Sau đó, bạn có thể bắt đầu trải nghiệm ứng dụng này.</string>
+    <string name="bt_permission">Cho Phép</string>
 </resources>

@@ -1,8 +1,12 @@
 package com.example.androidlogin.authentication
 
 import android.app.Activity
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,11 +18,14 @@ import com.example.androidlogin.R
 import com.example.androidlogin.databinding.ActivityLoginBinding
 import com.example.androidlogin.home_navigation.HomeActivity
 import com.example.androidlogin.model.user_model.UserModel
+import com.example.androidlogin.permission.PermissionActivity
+import com.example.androidlogin.push_notification.PushNotificationReceiver
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.util.*
 
 class LoginActivity : AppCompatActivity() {
 
@@ -63,6 +70,7 @@ class LoginActivity : AppCompatActivity() {
         binding.btGoogle.setOnClickListener {
             showSignInOptions()
         }
+        setupPushNotification()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -124,7 +132,7 @@ class LoginActivity : AppCompatActivity() {
     private fun updateUI(currentUser: FirebaseUser?) {
         if(currentUser != null) {
             checkAccountIsExists(currentUser)
-            startActivity(Intent(this, HomeActivity::class.java))
+            startActivity(Intent(this, PermissionActivity::class.java))
             finish()
         }
     }
@@ -145,10 +153,29 @@ class LoginActivity : AppCompatActivity() {
         val db = Firebase.firestore
         db.collection("user").document(userId)
             .set(mapOf(
-                "user_phone" to null
+                "user_phone" to null,
+                "user_lat" to null,
+                "user_long" to null
                 )
             )
             .addOnSuccessListener { Log.d("RegisterActivity", "DocumentSnapshot successfully written!") }
             .addOnFailureListener { e -> Log.w("RegisterActivity", "Error writing document", e) }
+    }
+    private fun setupPushNotification() {
+        val prefs: SharedPreferences = getSharedPreferences("isSetupNotification", 0)
+        if (!prefs.getBoolean("isSetupNotification", false)) {
+            val notifyIntent = Intent(this, PushNotificationReceiver::class.java)
+            val pendingIntent = PendingIntent.getBroadcast(this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val alarmManager: AlarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val calendar: Calendar = Calendar.getInstance()
+            calendar.timeInMillis = System.currentTimeMillis()
+            calendar.set(Calendar.HOUR_OF_DAY, 7)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 1)
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
+            val editor: SharedPreferences.Editor = prefs.edit()
+            editor.putBoolean("isSetupNotification", true)
+            editor.apply()
+        }
     }
 }

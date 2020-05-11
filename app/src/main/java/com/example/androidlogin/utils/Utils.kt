@@ -32,5 +32,8 @@ class Utils {
             loading?.window?.setBackgroundDrawableResource(R.color.fui_transparent)
             return loading
         }
+        fun celsius(temp: Double): Double {
+            return temp.minus(273.15)
+        }
     }
 }
